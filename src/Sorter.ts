@@ -1,5 +1,5 @@
 
-export interface Sortable {
+export interface Sortable { //the interface is not enough segregated in regard of SOLID principal, the name of the interface should be BubbleSortable
   length: number;
   swap(leftIndex: number, rightIndex: number): void;
   compare(leftIndex: number, rightIndex: number): boolean;

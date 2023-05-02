@@ -1,7 +1,8 @@
+import {  Sorter } from "./Sorter";
 
 export interface LinkedNode<T> {
-  readonly data: T;
-  readonly next: LinkedNode<T> | null;
+  data: T;
+  next: LinkedNode<T> | null;
 }
 
 export function linkedListNode<T>(data: T): LinkedNode<T> {
@@ -11,7 +12,7 @@ export function linkedListNode<T>(data: T): LinkedNode<T> {
   }
 }
 
-export class LinkedList<T>{
+export class LinkedList<T> extends Sorter{
 
   head: LinkedNode<T> | null = null;
   loopAdd(data: T): void {
@@ -39,7 +40,7 @@ export class LinkedList<T>{
     } else if (!node.next) {
       return { ...node, next: linkedListNode(data) }
     }
-    return this.recursiveAdd(data, node.next)
+    return {data:node.data, next:this.recursiveAdd(data, node.next)}
   }
 
   get length(): number {
@@ -69,14 +70,47 @@ export class LinkedList<T>{
 
     return index === 0 ? node : this.recursiveAt(index - 1, node.next);
   }
-  compare(){
-    
+  compare(leftIndex: number, rightIndex: number): boolean {
+    if (!this.head) {
+      throw new Error('List is empty')
+    }
+    const leftNode = this.at(leftIndex);
+    const rightNode = this.at(rightIndex);
+
+    if (!leftNode || !rightNode) {
+      return false;
+    }
+    return this.nodeIsSup(leftNode, rightNode);
+  }
+  private nodeIsSup(leftNode: LinkedNode<T>, rightNode: LinkedNode<T>): boolean {
+    return leftNode.data > rightNode.data;
+  }
+
+  swap(leftIndex: number, rightIndex: number): void {
+    const leftNode = this.at(leftIndex);
+    const rightNode = this.at(rightIndex);
+    if (rightNode && leftNode) {
+      const leftHand = leftNode?.data;
+      leftNode.data = rightNode.data;
+      rightNode.data = leftHand;
+    }
+  }
+
+  print(): void {
+    if (!this.head) {
+      return;
+    }
+
+    let node: LinkedNode<T> | null= this.head;
+    while (node) {
+      console.log(node.data);
+      node = node.next
+    }
   }
 }
 
 /**
- 
-(null) = undefined 
-(r null) index = index=0 alors r sinon null
-(r n) index = index=0 alors r sinon  recursiveAt(r.next, index-1)
+ {...node, data: rightNode.data }
+(r n) (r1, n) (r2, n) = (r, n) si 
+
 */
